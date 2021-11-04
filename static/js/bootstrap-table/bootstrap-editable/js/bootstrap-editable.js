@@ -627,7 +627,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
 
     //buttons
     $.fn.editableform.buttons = '<button type="submit" class="editable-submit">ok</button>'+
-    '<button type="button" class="editable-cancel">cancel</button>';      
+    '<button type="button" class="editable-cancel">cancel</button>'+'<button type="button" class="editable-check">Check</button>';      
 
     //error class attached to control-group
     $.fn.editableform.errorGroupClass = null;  
@@ -4721,6 +4721,9 @@ Editableform based on Twitter Bootstrap 3
       '</button>'+
       '<button type="button" class="btn btn-default btn-sm editable-cancel">'+
         '<i class="glyphicon glyphicon-remove"></i>'+
+      '</button>'+
+      '<button type="submit" class="btn btn-primary btn-sm editable-check">'+
+        '<i class="glyphicon glyphicon-check"></i>'+
       '</button>';         
     
     //error classes

@@ -379,6 +379,10 @@ var readings_picker = $('#tree-readings-picker');
 var question_table = $('#questionTable');
 var readings_table = $('#readingsTable');
 // Do all config after the DOM is `ready <https://api.jquery.com/ready/>`_.
+function printMe(){
+      console.log("Working");
+      return menu_from_editable(this, {manual: 'Manual', all_or_nothing: 'All or nothing', pct_correct: '% correct', interact: 'Interaction'}, 'autograde_possible_values', question_table);
+    };
 $(function () {
     $("#tags").select2();
     $("#addTags").select2();
@@ -423,7 +427,10 @@ $(function () {
         // Called when a node is unchecked.
         function (node) { remove_reading(node.id); }
     );
-
+  
+    let titleIcon='Question <button onclick= "printMe()" class="btn btn-primary btn-sm editable-submit">'+
+              '<i class="glyphicon glyphicon-check"></i>'+
+              '</button>';
 
     // This is a `bootstrap table <http://bootstrap-table.wenzhixin.net.cn>`_. Configuration:
     question_table.bootstrapTable({
@@ -436,6 +443,9 @@ $(function () {
             {
                 field: 'question',
                 title: 'Question',
+                onEventName:function(){
+                  alert("Here");
+                }
             }, {
                 field: 'question_id',
                 visible: false,
@@ -446,7 +456,7 @@ $(function () {
                 editable: true,
             }, {
                 field: 'autograde',
-                title: 'Auto-grade',
+                title: 'Autograde',
                 // Specify that the ``autograde`` column should be edited by a select drop-down. See `type <http://vitalets.github.io/x-editable/docs.html#editable>`_, and `source <http://vitalets.github.io/x-editable/docs.html#select>`_ attributes.
                 //
                 // A bit of a hack: editable is normally a Boolean, but is used to initialized the editable object, so I'm providing an Object instead which produces custom menus for each cell.
@@ -503,8 +513,30 @@ $(function () {
         // Configure `events <http://bootstrap-table.wenzhixin.net.cn/documentation/#events>`_.
         // See `onEditableSave <https://github.com/wenzhixin/bootstrap-table/tree/master/src/extensions/editable#oneditablesaveeditable-savebstable>`_.
         onEditableSave : async function(field, row, oldValue, html_element) {
-            let resp = await updateAssignmentRaw(row['question_id'], null, row['points'], row['autograde'], row['which_to_grade']);
-            add_to_qtable(resp);
+          let newPoints=row['points'];
+          let newAutograde=row['autograde'];
+          let new_which_to_grade=row['which_to_grade'];
+          //for each question in the bootstrap table
+          for(let question of $('#questionTable').bootstrapTable('getData')){
+            //check for the field that was edited
+            if (field==="points"){
+              question.points=newPoints;
+            }
+            else if (field==="autograde"){
+              question.autograde=newAutograde;
+            }
+            else if (field=="which_to_grade"){
+              question.which_to_grade=new_which_to_grade;
+            }
+             
+              //Get the questionId and update the row
+              let questionId=JSON.stringify(question['question_id']);
+              let resp = await updateAssignmentRaw(question['question_id'], null, question['points'], question['autograde'], question['which_to_grade']);
+              add_to_qtable(resp);
+              $('#questionTable').bootstrapTable('refreshOptions',{showRefresh: true});
+            }
+            
+            
         },
          // This function produces no useful output -- the ``dragRow`` and ``droppedAfterRow`` vars sometimes have no relationship to the actual event. I left it here in case for future development.
         ///onReorderRow : function(rows) {
