@@ -451,12 +451,16 @@ $(function () {
                 visible: false,
             }, {
                 field: 'points',
-                title: 'Points',
+                title: 'Points   '+'<button id="applyAllpoints" class="editable-submit" href="javascript:void(0)">'+
+                  '<i class="glyphicon glyphicon-check"></i>'+
+                  '</button>',
                 // Make the points value editable.
                 editable: true,
             }, {
                 field: 'autograde',
-                title: 'Autograde',
+                title: 'Autograde   '+'<button id="applyAllautograde" class="editable-submit" href="javascript:void(0)">'+
+                  '<i class="glyphicon glyphicon-check"></i>'+
+                  '</button>',
                 // Specify that the ``autograde`` column should be edited by a select drop-down. See `type <http://vitalets.github.io/x-editable/docs.html#editable>`_, and `source <http://vitalets.github.io/x-editable/docs.html#select>`_ attributes.
                 //
                 // A bit of a hack: editable is normally a Boolean, but is used to initialized the editable object, so I'm providing an Object instead which produces custom menus for each cell.
@@ -471,7 +475,9 @@ $(function () {
                 visible: false,
             }, {
                 field: 'which_to_grade',
-                title: 'Which to grade',
+                title: 'Which to grade   '+'<button id="applyAllwhich_to_grade" class="editable-submit" href="javascript:void(0)">'+
+                  '<i class="glyphicon glyphicon-check"></i>'+
+                  '</button>',
                 editable: {
                     source: function () {
                         // Update the menu for this item.
@@ -513,28 +519,9 @@ $(function () {
         // Configure `events <http://bootstrap-table.wenzhixin.net.cn/documentation/#events>`_.
         // See `onEditableSave <https://github.com/wenzhixin/bootstrap-table/tree/master/src/extensions/editable#oneditablesaveeditable-savebstable>`_.
         onEditableSave : async function(field, row, oldValue, html_element) {
-          let newPoints=row['points'];
-          let newAutograde=row['autograde'];
-          let new_which_to_grade=row['which_to_grade'];
-          //for each question in the bootstrap table
-          for(let question of $('#questionTable').bootstrapTable('getData')){
-            //check for the field that was edited
-            if (field==="points"){
-              question.points=newPoints;
-            }
-            else if (field==="autograde"){
-              question.autograde=newAutograde;
-            }
-            else if (field=="which_to_grade"){
-              question.which_to_grade=new_which_to_grade;
-            }
-             
-              //Get the questionId and update the row
-              let questionId=JSON.stringify(question['question_id']);
-              let resp = await updateAssignmentRaw(question['question_id'], null, question['points'], question['autograde'], question['which_to_grade']);
+              let resp = await updateAssignmentRaw(row['question_id'], null, row['points'], row['autograde'], row['which_to_grade']);
               add_to_qtable(resp);
-              $('#questionTable').bootstrapTable('refreshOptions',{showRefresh: true});
-            }
+            
             
             
         },
@@ -567,6 +554,40 @@ $(function () {
         },
     });
 
+    $("#applyAllpoints, #applyAllautograde, #applyAllwhich_to_grade").on("click",
+    async function () {
+      // select the first row in the table
+      let editedQuestion=$("#questionTable").bootstrapTable("getData")[0];
+      // store the values of the first row to be used in updating the column
+      let newPoints = editedQuestion["points"];
+      let newAutograde = editedQuestion["autograde"];
+      let newWhich_to_grade = editedQuestion["which_to_grade"];
+      for (let question of $("#questionTable").bootstrapTable("getData")) {
+        // identify the column to change from the id of the element clicked
+        let applyAllId=$(this).attr('id');
+        if ( applyAllId=== "applyAllpoints") {
+              question.points = newPoints;
+            } else if (applyAllId=== "applyAllautograde") {
+              question.autograde = newAutograde;
+            } else if (applyAllId == "applyAllwhich_to_grade") {
+              question.which_to_grade = newWhich_to_grade;
+            }
+         // get the questionId and update the row
+         let questionId = JSON.stringify(question["question_id"]);
+            let resp = await updateAssignmentRaw(
+              question["question_id"],
+              null,
+              question["points"],
+              question["autograde"],
+              question["which_to_grade"]
+            );
+            add_to_qtable(resp);
+            $("#questionTable").bootstrapTable("refreshOptions", {
+              showRefresh: true,
+            });
+      }
+    }
+  )
 
     // This is a `bootstrap table`_. Configuration:
     readings_table.bootstrapTable({
