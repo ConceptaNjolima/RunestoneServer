@@ -158,6 +158,7 @@
         <div id="readings-collapse" class="panel-collapse collapse">
           <div class="panel-body">
             <p>Define the readings students must complete by selecting chapters and subchapters of the textbook.</p>
+            <p><i>***To apply changes to entire column: edit the first row and click apply all button***</i></p>
             <table id="readingsTable" style="width:100%;">
             </table>
             <input id="search-tree-readings-picker" type="text">
@@ -174,6 +175,7 @@
         <div id="problems-collapse" class="panel-collapse collapse">
           <div class="panel-body">
             <p>Select the problems which compose this assignment.</p>
+            <p><i>***To apply changes to entire column: edit the first row and click apply all button***</i></p>
             <table id="questionTable" style="width:100%;"></table>
             <span id="totalPointsCopy" style="margin-bottom: 10px;"></span><br>
             <div class="container">
@@ -379,10 +381,6 @@ var readings_picker = $('#tree-readings-picker');
 var question_table = $('#questionTable');
 var readings_table = $('#readingsTable');
 // Do all config after the DOM is `ready <https://api.jquery.com/ready/>`_.
-function printMe(){
-      console.log("Working");
-      return menu_from_editable(this, {manual: 'Manual', all_or_nothing: 'All or nothing', pct_correct: '% correct', interact: 'Interaction'}, 'autograde_possible_values', question_table);
-    };
 $(function () {
     $("#tags").select2();
     $("#addTags").select2();
@@ -427,11 +425,6 @@ $(function () {
         // Called when a node is unchecked.
         function (node) { remove_reading(node.id); }
     );
-  
-    let titleIcon='Question <button onclick= "printMe()" class="btn btn-primary btn-sm editable-submit">'+
-              '<i class="glyphicon glyphicon-check"></i>'+
-              '</button>';
-
     // This is a `bootstrap table <http://bootstrap-table.wenzhixin.net.cn>`_. Configuration:
     question_table.bootstrapTable({
         // Select the ``question`` column as a unique id, per the `bootstrap docs <http://bootstrap-table.wenzhixin.net.cn/documentation/>`_.
@@ -451,14 +444,14 @@ $(function () {
                 visible: false,
             }, {
                 field: 'points',
-                title: 'Points   '+'<button id="applyAllpoints" class="editable-submit" href="javascript:void(0)">'+
+                title: 'Points   '+'<button id="applyAllpoints" class="editable-submit btn-primary" style="margin-left:50%;border-radius:15%" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 // Make the points value editable.
                 editable: true,
             }, {
                 field: 'autograde',
-                title: 'Autograde   '+'<button id="applyAllautograde" class="editable-submit" href="javascript:void(0)">'+
+                title: 'Autograde   '+'<button id="applyAllautograde" class="editable-submit btn-primary" style="margin-left:50%;border-radius:15%" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 // Specify that the ``autograde`` column should be edited by a select drop-down. See `type <http://vitalets.github.io/x-editable/docs.html#editable>`_, and `source <http://vitalets.github.io/x-editable/docs.html#select>`_ attributes.
@@ -475,7 +468,7 @@ $(function () {
                 visible: false,
             }, {
                 field: 'which_to_grade',
-                title: 'Which to grade   '+'<button id="applyAllwhich_to_grade" class="editable-submit" href="javascript:void(0)">'+
+                title: 'Which to grade   '+'<button id="applyAllwhich_to_grade" class="editable-submit btn-primary" style="margin-left:50%;border-radius:15%" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 editable: {
@@ -582,9 +575,8 @@ $(function () {
               question["which_to_grade"]
             );
             add_to_qtable(resp);
-            $("#questionTable").bootstrapTable("refreshOptions", {
-              showRefresh: true,
-            });
+            // refresh table as the values change
+            $("#questionTable").bootstrapTable("refreshOptions", {});
       }
     }
   )
@@ -612,7 +604,9 @@ $(function () {
                 title: 'Activity count',
             }, {
                 field: 'activities_required',
-                title: '# required',
+                title: '# required    '+'<button id="applyAllrequired" class="editable-submit btn-primary" style="border-radius:15%;" href="javascript:void(0)">'+
+                  '<i class="glyphicon glyphicon-check"></i>'+
+                  '</button>',
                 // The hack_ again.
                 editable: {
                     // TODO: Validate that this is <= activity_count. See validate at http://vitalets.github.io/x-editable/docs.html#editable.
@@ -629,12 +623,16 @@ $(function () {
                 },
             }, {
                 field: 'points',
-                title: 'Points',
+                title: 'Points    '+'<button id="applyAllreadingPoints" class="editable-submit btn-primary" style="border-radius:15%" href="javascript:void(0)">'+
+                  '<i class="glyphicon glyphicon-check"></i>'+
+                  '</button>',
                 // Make the points value editable.
                 editable: true,
             }, {
                 field: 'autograde',
-                title: 'Auto-grade',
+                title: 'Auto-grade    '+'<button id="applyAllreadingAutograde" class="editable-submit btn-primary" style="border-radius:15%" href="javascript:void(0)">'+
+                  '<i class="glyphicon glyphicon-check"></i>'+
+                  '</button>',
                 // Specify that the ``autograde`` column should be edited by a select drop-down. See `type <http://vitalets.github.io/x-editable/docs.html#editable>`_, and `source <http://vitalets.github.io/x-editable/docs.html#select>`_ attributes.
                 //
                 // A bit of a _`hack`: editable is normally a Boolean, but is used to initialized the editable object, so I'm providing an Object instead which produces custom menus for each cell.
@@ -649,7 +647,9 @@ $(function () {
                 visible: false,
             }, {
                 field: 'which_to_grade',
-                title: 'Which to grade',
+                title: 'Which to grade    '+'<button id="applyAllreadingWhich_to_grade" class="editable-submit btn-primary" style="border-radius:15%" href="javascript:void(0)">'+
+                  '<i class="glyphicon glyphicon-check"></i>'+
+                  '</button>',
                 editable: {
                     source: function () {
                         // Update the menu for this item.
@@ -712,6 +712,37 @@ $(function () {
             })
         },
     });
+    $("#applyAllreadingPoints, #applyAllreadingAutograde, #applyAllreadingWhich_to_grade, #applyAllrequired").on("click",
+    async function () {
+      // select the first row in the readingsTable
+      let editedReading=$("#readingsTable").bootstrapTable("getData")[0];
+      // store the values of the first row to be used in updating the column
+      let newreadingPoints = editedReading["points"];
+      let newreadingAutograde = editedReading["autograde"];
+      let newreadingWhich_to_grade = editedReading["which_to_grade"];
+      let newreadingRequired=editedReading["activities_required"];
+      for (let reading of $("#readingsTable").bootstrapTable("getData")) {
+        // identify the column to change from the id of the element clicked
+        let applyAllId=$(this).attr('id');
+        if ( applyAllId=== "applyAllreadingPoints") {
+              reading.points = newreadingPoints;
+            } else if (applyAllId=== "applyAllreadingAutograde") {
+              reading.autograde = newreadingAutograde;
+            } else if (applyAllId == "applyAllreadingWhich_to_grade") {
+              reading.which_to_grade = newreadingWhich_to_grade;
+            }
+            else if (applyAllId==="applyAllrequired"){
+              reading.activities_required=newreadingRequired;
+            }
+         // get the subChapterId and update the row
+         let subChapterId = JSON.stringify(editedReading["subchapter_id"]);
+         let resp = await updateReading(reading['subchapter_id'], reading['activities_required'], reading['points'], reading['autograde'], reading['which_to_grade']);
+            add_to_table(resp);
+            //refresh table as the values change
+            $("#readingsTable").bootstrapTable("refreshOptions", {});
+      }
+    }
+  )
 });
 </script>
 
