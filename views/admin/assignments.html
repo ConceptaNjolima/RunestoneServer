@@ -169,7 +169,7 @@
         <!-- Problems collapsible section -->
         <div class="panel-heading">
           <h4 class="panel-title">
-            <a data-toggle="collapse" href="#problems-collapse"><span class="glyphicon glyphicon-expand" aria-hidden="true"></span> Problems</a>
+            <a data-toggle="collapse" href="#problems-collapse"><span id="ProblemsCollapsible" class="glyphicon glyphicon-expand" aria-hidden="true"></span> Problems</a>
           </h4>
         </div>
         <div id="problems-collapse" class="panel-collapse collapse">
@@ -444,14 +444,14 @@ $(function () {
                 visible: false,
             }, {
                 field: 'points',
-                title: 'Points   '+'<button id="applyAllpoints" class="editable-submit btn-primary" style="margin-left:50%;border-radius:15%" href="javascript:void(0)">'+
+                title: 'Points   '+'<button id="applyAllpoints" class="editable-submit btn-primary" data-toggle="tooltip" data-placement="bottom" title="Apply All changes to column" style="margin-left:20%;border-radius:15%" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 // Make the points value editable.
                 editable: true,
             }, {
                 field: 'autograde',
-                title: 'Autograde   '+'<button id="applyAllautograde" class="editable-submit btn-primary" style="margin-left:50%;border-radius:15%" href="javascript:void(0)">'+
+                title: 'Autograde   '+'<button id="applyAllautograde" class="editable-submit btn-primary" data-toggle="tooltip" data-placement="bottom" title="Apply All changes to column" style="margin-left:20%;border-radius:15%" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 // Specify that the ``autograde`` column should be edited by a select drop-down. See `type <http://vitalets.github.io/x-editable/docs.html#editable>`_, and `source <http://vitalets.github.io/x-editable/docs.html#select>`_ attributes.
@@ -468,7 +468,7 @@ $(function () {
                 visible: false,
             }, {
                 field: 'which_to_grade',
-                title: 'Which to grade   '+'<button id="applyAllwhich_to_grade" class="editable-submit btn-primary" style="margin-left:50%;border-radius:15%" href="javascript:void(0)">'+
+                title: 'Which to grade   '+'<button id="applyAllwhich_to_grade" class="editable-submit btn-primary" data-toggle="tooltip" data-placement="bottom" title="Apply All changes to column" style="margin-left:20%;border-radius:15%" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 editable: {
@@ -547,6 +547,11 @@ $(function () {
         },
     });
 
+    // Add tooltip to the apply all changes
+    $(function(){
+      $("#applyAllpoints,#applyAllautograde,#applyAllwhich_to_grade,#applyAllreadingPoints, #applyAllreadingAutograde, #applyAllreadingWhich_to_grade, #applyAllrequired").tooltip();
+    });
+    
     $("#applyAllpoints, #applyAllautograde, #applyAllwhich_to_grade").on("click",
     async function () {
       // select the first row in the table
@@ -558,6 +563,7 @@ $(function () {
       for (let question of $("#questionTable").bootstrapTable("getData")) {
         // identify the column to change from the id of the element clicked
         let applyAllId=$(this).attr('id');
+        
         if ( applyAllId=== "applyAllpoints") {
               question.points = newPoints;
             } else if (applyAllId=== "applyAllautograde") {
@@ -604,7 +610,7 @@ $(function () {
                 title: 'Activity count',
             }, {
                 field: 'activities_required',
-                title: '# required    '+'<button id="applyAllrequired" class="editable-submit btn-primary" style="border-radius:15%;" href="javascript:void(0)">'+
+                title: '# required    '+'<button id="applyAllrequired" class="editable-submit btn-primary" data-toggle="tooltip" data-placement="bottom" title="Apply All changes to column" style="border-radius:15%;" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 // The hack_ again.
@@ -623,14 +629,14 @@ $(function () {
                 },
             }, {
                 field: 'points',
-                title: 'Points    '+'<button id="applyAllreadingPoints" class="editable-submit btn-primary" style="border-radius:15%" href="javascript:void(0)">'+
+                title: 'Points    '+'<button id="applyAllreadingPoints" class="editable-submit btn-primary" data-toggle="tooltip" data-placement="bottom" title="Apply All changes to column" style="border-radius:15%" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 // Make the points value editable.
                 editable: true,
             }, {
                 field: 'autograde',
-                title: 'Auto-grade    '+'<button id="applyAllreadingAutograde" class="editable-submit btn-primary" style="border-radius:15%" href="javascript:void(0)">'+
+                title: 'Auto-grade    '+'<button id="applyAllreadingAutograde" class="editable-submit btn-primary" data-toggle="tooltip" data-placement="bottom" title="Apply All changes to column" style="border-radius:15%" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 // Specify that the ``autograde`` column should be edited by a select drop-down. See `type <http://vitalets.github.io/x-editable/docs.html#editable>`_, and `source <http://vitalets.github.io/x-editable/docs.html#select>`_ attributes.
@@ -647,7 +653,7 @@ $(function () {
                 visible: false,
             }, {
                 field: 'which_to_grade',
-                title: 'Which to grade    '+'<button id="applyAllreadingWhich_to_grade" class="editable-submit btn-primary" style="border-radius:15%" href="javascript:void(0)">'+
+                title: 'Which to grade    '+'<button id="applyAllreadingWhich_to_grade" class="editable-submit btn-primary" data-toggle="tooltip" data-placement="bottom" title="Apply All changes to column" style="border-radius:15%" href="javascript:void(0)">'+
                   '<i class="glyphicon glyphicon-check"></i>'+
                   '</button>',
                 editable: {
