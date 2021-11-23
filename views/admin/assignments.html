@@ -514,9 +514,6 @@ $(function () {
         onEditableSave : async function(field, row, oldValue, html_element) {
               let resp = await updateAssignmentRaw(row['question_id'], null, row['points'], row['autograde'], row['which_to_grade']);
               add_to_qtable(resp);
-            
-            
-            
         },
          // This function produces no useful output -- the ``dragRow`` and ``droppedAfterRow`` vars sometimes have no relationship to the actual event. I left it here in case for future development.
         ///onReorderRow : function(rows) {
