@@ -549,6 +549,7 @@ $(function () {
       $("#applyAllpoints,#applyAllautograde,#applyAllwhich_to_grade,#applyAllreadingPoints, #applyAllreadingAutograde, #applyAllreadingWhich_to_grade, #applyAllrequired").tooltip();
     });
     
+    // Add event handlers to the apply all buttons in the Readings table
     $("#applyAllpoints, #applyAllautograde, #applyAllwhich_to_grade").on("click",
     async function () {
       // select the first row in the table
@@ -715,6 +716,8 @@ $(function () {
             })
         },
     });
+
+    // Add event handlers to the apply all buttons in the Readings table
     $("#applyAllreadingPoints, #applyAllreadingAutograde, #applyAllreadingWhich_to_grade, #applyAllrequired").on("click",
     async function () {
       // select the first row in the readingsTable
